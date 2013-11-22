@@ -1,0 +1,27 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'users/bootstrap/css/bootstrap.css' %} "/>
+
+<body>
+	{{ state }}
+    
+    {% if messages %}
+        <p>message<p>
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    {% endif %} 
+
+	<form action="" method="post">
+        {% csrf_token %}
+		{% if next %}
+		<input type="hidden" name="next" value="{{ next }}" />
+		{% endif %}
+		Username:
+		<input type="text" name="username" value="{{ username }}" /><br />
+		Password:
+		<input type="password" name="password" value="" /><br />
+
+		<input type="submit" value="Log In" />
+    </form>
+    <a href="{% url 'signup:signup' %}"> Sign Up </a>
+</body>

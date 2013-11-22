@@ -1,0 +1,22 @@
+<html>
+<head>
+    <title> Search </title>
+</head>
+<p> Put in a user first name, last name, or search by username </p>
+<body>
+    <form action="/search-user/" method="post">
+        {% csrf_token %}
+        <input type="text" name="q">
+        <input type="submit" value="Search">
+    </form>
+    {% if results %}
+        <p> {{ message }} </p>
+        <ul>
+        {% for r in results %}
+            <li> <a href="{% url 'users:userview' r.id %}"> {{ r.get_full_name }} </a></li>
+        {% endfor %}
+    {% else %}
+        <p> {{ message }} </p>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,79 @@
+{% extends "users/base.html" %}
+{% load user_extra_filters %}
+{% block content %}
+<p> You are on {{ this_user.get_full_name }}'s profile page </p>
+
+{% if friend_request_exists %}
+    {% if mutual_friends %}
+        <p> You guys share the following mutual friends: <p>
+        <ul>
+        {% for f in mutual_friends %}
+            <li> {{ f.get_full_name }} </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p> You share no mutual friends with this person </p>
+    {% endif %}
+    <strong> You have a pending friend request with this person </strong>
+{% elif logged_in_user not in friends and logged_in_user != this_user %}
+    <p> You are not allowed to view this page because you are not friends with this person </p>
+    
+    {% if mutual_friends %}
+        <p> You guys share the following mutual friends: <p>
+        <ul>
+        {% for f in mutual_friends %}
+            <li> {{ f.get_full_name }} </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p> You share no mutual friends with this person </p>
+    {% endif %}
+
+    <form name="input" action="{% url 'users:sendrequest' this_user.id %}" method="post">
+        {% csrf_token %}
+        <input name="sendrequest" type="submit" value="Send a friend request">
+    </form>
+
+{% else %}
+    <p> This person has {{ number_of_friends }} friends </p>
+    <p> Friends with: </p>
+    <ul>
+        {% if not friends %}
+            <p> THIS PERSON HAS NO FRIENDS LOL </p>
+        {% else %}
+            {% for f in friends %}
+                <li><a href="{% url 'users:userview' f.id %}">{{ f.get_full_name }}</a></li>
+            {% endfor %}
+        {% endif %}
+    </ul>   
+    <p> Wall: </p>
+    <p> Post something </p>
+    <form method="post" action="{% url 'users:userview' this_user.id %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Post">
+    </form>
+    {% for post in all_wall_posts %}
+        <p> This post has {{ post.like_set.all|length }} likes: </p>
+        <ul>
+            {% for l in post.like_set.all %}
+                <li> {{ l.liked_by.get_full_name }} liked this. </li>
+            {% endfor %}
+        </ul>
+        {% if not logged_in_user|likes:post %}
+            <form name="input" action="{% url 'likes:addlike' post.id logged_in_user.id %}" method="post">
+                {% csrf_token %}
+                <input name="addlike" type="submit" value="Like this wallpost">
+            </form>
+        {% else %}
+            <p> You have already liked this post </p>
+        {% endif %}
+        <li><strong>{{ post.poster.get_full_name }} posted: <br />
+            <p>"{{ post.message }}"</p>
+            <p>on {{ post.pub_date }}</p>
+        </strong>
+        </li>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

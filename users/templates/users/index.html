@@ -1,0 +1,11 @@
+{% extends "users/base.html" %}
+
+{% block content %}
+<p> Showing 100 users, ({{ number_of_users }}) users total </p>
+
+<ul>
+	{% for u in first_100 %}
+		<li><a href="{% url 'users:userview' u.id %}">{{ u.get_full_name }}</a></li>
+	{% endfor %}
+</ul>
+{% endblock %}

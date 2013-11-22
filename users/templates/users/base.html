@@ -1,0 +1,45 @@
+{% load static %}
+{% load unfriendly_tags %}
+<link rel="stylesheet" type="text/css" href="{% static 'users/bootstrap/css/bootstrap.css' %} "/>
+<link rel="stylesheet" type="text/css" href="{% static 'users/bootstrap/css/bootstrap-responsive.css' %} "/>
+
+<p> You are logged in as {{ logged_in_as.get_full_name }} <p>
+<p> Achievements unlocked: </p>
+{% if achievements %}
+    <ul>
+        {% for a in achievements %}
+        <li> {{ a }} </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p> You have no achievements. achieve something. </p>
+{% endif %}
+{% if request_set %}
+    {% for r in request_set %}
+        <p> You have a friend request from {{ r.requester.get_full_name }} </p>
+        <form name="input" action="{% url 'users:acceptordecline' r.requester.id %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Accept" name="a">
+            <input type="submit" value="Decline" name="d">
+            <!--<input type="submit" value="Submit">-->
+        </form>
+    {% endfor %}
+{% else %}
+    <p> You have no friend requests at the moment. </p>
+{% endif %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<a href="{% url 'users:logoutpage' %}"> Logout </a>
+<a href="{% url 'users:index' %}"> Index page </a>
+<a href="{% url 'users:searchuser' %}"> Search for a user </a>
+<a href="{% url 'users:userview' logged_in_as.id %}"> My profile </a>
+
+{% block content %}
+
+{% endblock %}

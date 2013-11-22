@@ -1,0 +1,11 @@
+<p> You have successfully registered. </p>
+<p> You need to activate your account by putting the code below </p>
+<p> We will send you an e-mail shortly with a code that you will need to put below </p>
+<form action="{% url 'signup:success' %}" method="post">
+    {% csrf_token %}
+    <!--{{ form.as_p }}-->
+    Code: <input type="text" name="code" value="" /><br />
+    Username: <input type="text" name="username" value="" /><br />
+    <input type="submit" value="Submit">
+</form>
+{{ state }}
