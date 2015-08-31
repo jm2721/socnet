@@ -24,7 +24,7 @@ To: To Person <{email}>
 Subject: Confirm registration on socnet
 
 Hello,
-Go to websitename.com/activate and please input the code below and your username to finalize the registration.
+Go to socnet.com/activate and please input the code below and your username to finalize the registration.
 
 Code: {code}
 """.format(email=email, code=code)
@@ -36,7 +36,7 @@ Code: {code}
     # envelope header.
     s = smtplib.SMTP('smtp.gmail.com')
     s.starttls()
-    s.login('jm2721@trevor.org', 'frietiec123')
+    s.login('mailer2011280@gmail.com', 'thisisadummypassword')
     s.sendmail(sender, receivers, msg)
     s.quit()
 
